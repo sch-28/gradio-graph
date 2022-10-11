@@ -36,5 +36,6 @@ export const component_map = {
 	tabitem: () => import("./TabItem"),
 	textbox: () => import("./Textbox"),
 	timeseries: () => import("./TimeSeries"),
-	video: () => import("./Video")
+	video: () => import("./Video"),
+	graph: () => import("./Graph"),
 };

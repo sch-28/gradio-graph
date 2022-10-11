@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { createEventDispatcher } from "svelte";
-	import { HTML } from "@gradio/html";
+	import { Graph } from "../../../../graph/";
 
 	export let label: string;
 	export let elem_id: string = "";
@@ -12,5 +12,4 @@
 	$: label, dispatch("change");
 </script>
 
-
-<HTML {value} {elem_id} {visible} on:change />
+<Graph  on:change {elem_id} {value} {visible}/>

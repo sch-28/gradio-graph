@@ -331,3 +331,17 @@ class Image3D(components.Model3D):
             "Usage of gradio.outputs is deprecated, and will not be supported in the future, please import your components from gradio.components",
         )
         super().__init__(clear_color=clear_color, label=label)
+
+
+class Graph(components.Graph):
+    """
+    Used for HTML output. Expects an HTML valid string.
+    Output type: str
+    """
+
+    def __init__(self, label: Optional[str] = None):
+        """
+        Parameters:
+        label (str): component name in interface.
+        """
+        super().__init__(label=label)
