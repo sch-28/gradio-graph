@@ -23,6 +23,7 @@ from gradio.components import (
     Dropdown,
     File,
     Gallery,
+    Graph,
     Highlightedtext,
     HighlightedText,
     Image,
@@ -43,7 +44,6 @@ from gradio.components import (
     Variable,
     Video,
     component,
-    Graph
 )
 from gradio.examples import create_examples as Examples
 from gradio.exceptions import Error

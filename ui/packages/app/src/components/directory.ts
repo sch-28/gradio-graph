@@ -37,5 +37,5 @@ export const component_map = {
 	textbox: () => import("./Textbox"),
 	timeseries: () => import("./TimeSeries"),
 	video: () => import("./Video"),
-	graph: () => import("./Graph"),
+	graph: () => import("./Graph")
 };

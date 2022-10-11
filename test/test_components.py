@@ -1831,17 +1831,20 @@ def test_dataset_calls_as_example(*mocks):
     )
     assert all([m.called for m in mocks])
 
+
 class TestGraph(unittest.TestCase):
     def test_component_functions(self):
         pass
+
     def test_in_interface_as_input(self):
         pass
 
     def test_in_interface_as_output(self):
         pass
+
     def test_static(self):
         pass
-    
-    
+
+
 if __name__ == "__main__":
     unittest.main()

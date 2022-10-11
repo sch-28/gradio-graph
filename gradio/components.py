@@ -4013,6 +4013,7 @@ def get_component_instance(comp: str | dict | Component, render=True) -> Compone
             f"Component must provided as a `str` or `dict` or `Component` but is {comp}"
         )
 
+
 class Graph(Changeable, IOComponent, SimpleSerializable):
     """
     Used to display arbitrary HTML output.
@@ -4075,11 +4076,6 @@ class Graph(Changeable, IOComponent, SimpleSerializable):
 
     def style(self):
         return self
-
-
-    
-    
-
 
 
 DataFrame = Dataframe

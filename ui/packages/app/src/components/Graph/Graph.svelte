@@ -12,4 +12,4 @@
 	$: label, dispatch("change");
 </script>
 
-<Graph  on:change {elem_id} {value} {visible}/>
+<Graph on:change {elem_id} {value} {visible} />
