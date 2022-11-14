@@ -2,7 +2,7 @@ import gradio as gr
 
 
 with gr.Blocks() as kgVisualizationTab:
-    examples = gr.Radio(["http://www.wikidata.org/entity/Q42442324",
-                        "http://www.wikidata.org/entity/Q84263196"])
+    input = gr.Textbox(value="http://www.wikidata.org/entity/Q84263196", label="Root")
+    submit = gr.Button(value="Submit", variant="primary")
     graph = gr.Graph()
-    examples.change(fn=None, inputs=examples, outputs=graph)
+    submit.click(fn=None, inputs=input, outputs=graph)
