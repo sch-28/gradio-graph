@@ -19,7 +19,6 @@ const FONTS = "__FONTS_CSS__";
 interface Config {
 	auth_required: boolean | undefined;
 	auth_message: string;
-
 	components: ComponentMeta[];
 	css: string | null;
 	dependencies: Dependency[];
@@ -34,37 +33,8 @@ interface Config {
 	title: string;
 	version: string;
 	is_space: boolean;
+	is_colab: boolean;
 	show_api: boolean;
-	// allow_flagging: string;
-	// allow_interpretation: boolean;
-	// article: string;
-	// cached_examples: boolean;
-
-	// description: string;
-	// examples: Array<unknown>;
-	// examples_per_page: number;
-	// favicon_path: null | string;
-	// flagging_options: null | unknown;
-
-	// function_count: number;
-	// input_components: Array<ComponentMeta>;
-	// output_components: Array<ComponentMeta>;
-	// layout: string;
-	// live: boolean;
-	// mode: "blocks" | "interface" | undefined;
-	// enable_queue: boolean;
-	// root: string;
-	// show_input: boolean;
-	// show_output: boolean;
-	// simpler_description: string;
-	// theme: string;
-	// thumbnail: null | string;
-	// title: string;
-	// version: string;
-	// space?: string;
-	// detail: string;
-	// dark: boolean;
-	// dev_mode: boolean;
 }
 
 let app_id: string | null = null;
@@ -152,6 +122,8 @@ async function handle_config(
 	}
 
 	mount_custom_css(target, config.css);
+	window.__is_colab__ = config.is_colab;
+
 	if (config.root === undefined) {
 		config.root = BACKEND_URL;
 	}
@@ -169,7 +141,8 @@ function mount_app(
 	target: HTMLElement | ShadowRoot | false,
 	wrapper: HTMLDivElement,
 	id: number,
-	autoscroll?: boolean
+	autoscroll?: boolean,
+	is_embed = false
 ) {
 	//@ts-ignore
 	if (config.detail === "Not authenticated" || config.auth_required) {
@@ -184,7 +157,12 @@ function mount_app(
 		});
 	} else {
 		let session_hash = Math.random().toString(36).substring(2);
-		config.fn = fn(session_hash, config.root + "api/", config.is_space);
+		config.fn = fn(
+			session_hash,
+			config.root + "run/",
+			config.is_space,
+			is_embed
+		);
 
 		new Blocks({
 			target: wrapper,
@@ -257,7 +235,11 @@ function create_custom_element() {
 			let autoscroll = this.getAttribute("autoscroll");
 
 			let source = space
-				? `https://hf.space/embed/${space}/+/`
+				? (
+						await (
+							await fetch(`https://huggingface.co/api/spaces/${space}/host`)
+						).json()
+				  ).host
 				: this.getAttribute("src");
 
 			const _autoscroll = autoscroll === "true" ? true : false;
@@ -277,7 +259,8 @@ function create_custom_element() {
 					this.root,
 					this.wrapper,
 					this._id,
-					_autoscroll
+					_autoscroll,
+					!!space
 				);
 			}
 		}
