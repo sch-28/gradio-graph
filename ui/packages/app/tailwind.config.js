@@ -22,7 +22,8 @@ const allowed_colors = [
 module.exports = {
 	content: [
 		"./src/**/*.{html,js,svelte,ts}",
-		"**/@gradio/**/*.{html,js,svelte,ts,css}"
+		"**/@gradio/**/*.{html,js,svelte,ts,css}",
+		"../graph/**/*.{html,js,svelte,ts,css}"
 	],
 
 	theme: {
