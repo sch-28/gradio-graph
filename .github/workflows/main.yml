@@ -53,6 +53,6 @@ jobs:
           bash scripts/build_frontend.sh
       - name: Deploy
         run: >
-          git add gradio
-          git commit -m "Deployed build"
+          git add gradio && 
+          git commit -m "Deployed build" &&
           git push 
