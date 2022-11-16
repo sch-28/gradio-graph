@@ -49,6 +49,5 @@ jobs:
           sudo python3.9 get-pip.py
       - name: Build gradio
         run: >
-          cd gradio_graph && 
           bash scripts/install_gradio.sh && 
           bash scripts/build_frontend.sh
