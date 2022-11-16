@@ -38,7 +38,7 @@ jobs:
           # running from unless specified. Example URLs are https://github.com or
           # https://my-ghes-server.example.com
           # github-server-url: ''
-      - name: Create build
+      - name: Install dependencies
         run: >
           sudo apt-get update && 
           sudo apt-get install -y software-properties-common &&
@@ -47,7 +47,8 @@ jobs:
           sudo npm install -g pnpm && 
           sudo curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py && 
           sudo python3.9 get-pip.py
-          
+      - name: Build gradio
+        run: >
           cd gradio_graph && 
           bash scripts/install_gradio.sh && 
           bash scripts/build_frontend.sh
