@@ -41,4 +41,4 @@ jobs:
       - name: Create build
         run: sudo apt update && \
              sudo apt-get install -y software-properties-common &&\
-             sudo add-apt-repository ppa:deadsnakes/ppa 
+             add-apt-repository ppa:deadsnakes/ppa 
