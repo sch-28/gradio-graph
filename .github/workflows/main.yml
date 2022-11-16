@@ -11,8 +11,8 @@ env:
   NODE_OPTIONS: "--max-old-space-size=4096"
 
 jobs:
-  build:
-      name: build
+  Gradio_Build:
+      name: Gradio Build
       runs-on: ubuntu-22.04
       steps:
       - uses: actions/checkout@v3
@@ -51,3 +51,8 @@ jobs:
         run: >
           bash scripts/install_gradio.sh && 
           bash scripts/build_frontend.sh
+      - name: Deploy
+        run: >
+          git add gradio
+          git commit -m "Deployed build"
+          git push 
