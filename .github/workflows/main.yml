@@ -39,10 +39,7 @@ jobs:
           # https://my-ghes-server.example.com
           # github-server-url: ''
       - name: Create build
-        run: apt update && apt install sudo && \
+        run: sudo apt update && \
              sudo apt-get install -y software-properties-common &&\
              sudo add-apt-repository ppa:deadsnakes/ppa && \
-             sudo apt-get install -y git python3.9 nodejs curl python-is-python3 && \
-             sudo npm install -g pnpm && \
-             sudo curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py && \
-             sudo python3.9 get-pip.py
+           
