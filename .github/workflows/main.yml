@@ -47,3 +47,7 @@ jobs:
           sudo npm install -g pnpm && 
           sudo curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py && 
           sudo python3.9 get-pip.py
+          
+          cd gradio_graph && 
+          bash scripts/install_gradio.sh && 
+          bash scripts/build_frontend.sh
