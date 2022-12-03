@@ -16,6 +16,7 @@ export const component_map = {
 	file: () => import("./File"),
 	form: () => import("./Form"),
 	gallery: () => import("./Gallery"),
+	graph: () => import("./Graph"),
 	group: () => import("./Group"),
 	highlightedtext: () => import("./HighlightedText"),
 	html: () => import("./HTML"),
@@ -36,6 +37,6 @@ export const component_map = {
 	tabitem: () => import("./TabItem"),
 	textbox: () => import("./Textbox"),
 	timeseries: () => import("./TimeSeries"),
-	video: () => import("./Video"),
-	graph: () => import("./Graph")
+	uploadbutton: () => import("./UploadButton"),
+	video: () => import("./Video")
 };

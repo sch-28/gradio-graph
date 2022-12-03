@@ -1,4 +1,5 @@
 import asyncio
+import copy
 import io
 import json
 import os
@@ -758,6 +759,36 @@ class TestSpecificUpdate:
             "__type__": "update",
         }
 
+    @pytest.mark.asyncio
+    async def test_accordion_update(self):
+        with gr.Blocks() as demo:
+            with gr.Accordion(label="Open for greeting", open=False) as accordion:
+                gr.Textbox("Hello!")
+            open_btn = gr.Button(label="Open Accordion")
+            close_btn = gr.Button(label="Close Accordion")
+            open_btn.click(
+                lambda: gr.Accordion.update(open=True, label="Open Accordion"),
+                inputs=None,
+                outputs=[accordion],
+            )
+            close_btn.click(
+                lambda: gr.Accordion.update(open=False, label="Closed Accordion"),
+                inputs=None,
+                outputs=[accordion],
+            )
+        result = await demo.process_api(fn_index=0, inputs=[None], request=None)
+        assert result["data"][0] == {
+            "open": True,
+            "label": "Open Accordion",
+            "__type__": "update",
+        }
+        result = await demo.process_api(fn_index=1, inputs=[None], request=None)
+        assert result["data"][0] == {
+            "open": False,
+            "label": "Closed Accordion",
+            "__type__": "update",
+        }
+
 
 class TestRender:
     def test_duplicate_error(self):
@@ -943,6 +974,70 @@ class TestEvery:
                         assert False
                     else:
                         break
+
+
+class TestAddRequests:
+    def test_no_type_hints(self):
+        def moo(a, b):
+            return a + b
+
+        inputs = [1, 2]
+        request = gr.Request()
+        inputs_ = gr.blocks.add_request_to_inputs(moo, copy.deepcopy(inputs), request)
+        assert inputs_ == inputs
+
+        boo = partial(moo, a=1)
+        inputs = [2]
+        inputs_ = gr.blocks.add_request_to_inputs(boo, copy.deepcopy(inputs), request)
+        assert inputs_ == inputs
+
+    def test_no_type_hints_with_request(self):
+        def moo(a: str, b: int):
+            return a + str(b)
+
+        inputs = ["abc", 2]
+        request = gr.Request()
+        inputs_ = gr.blocks.add_request_to_inputs(moo, copy.deepcopy(inputs), request)
+        assert inputs_ == inputs
+
+        boo = partial(moo, a="def")
+        inputs = [2]
+        inputs_ = gr.blocks.add_request_to_inputs(boo, copy.deepcopy(inputs), request)
+        assert inputs_ == inputs
+
+    def test_type_hints_with_request(self):
+        def moo(a: str, b: gr.Request):
+            return a
+
+        inputs = ["abc"]
+        request = gr.Request()
+        inputs_ = gr.blocks.add_request_to_inputs(moo, copy.deepcopy(inputs), request)
+        assert inputs_ == inputs + [request]
+
+        def moo(a: gr.Request, b, c: int):
+            return c
+
+        inputs = ["abc", 5]
+        request = gr.Request()
+        inputs_ = gr.blocks.add_request_to_inputs(moo, copy.deepcopy(inputs), request)
+        assert inputs_ == [request] + inputs
+
+    def test_type_hints_with_multiple_requests(self):
+        def moo(a: str, b: gr.Request, c: gr.Request):
+            return a
+
+        inputs = ["abc"]
+        request = gr.Request()
+        inputs_ = gr.blocks.add_request_to_inputs(moo, copy.deepcopy(inputs), request)
+        assert inputs_ == inputs + [request, request]
+
+        def moo(a: gr.Request, b, c: int, d: gr.Request):
+            return c
+
+        inputs = ["abc", 5]
+        request = gr.Request()
+        inputs_ = gr.blocks.add_request_to_inputs(moo, copy.deepcopy(inputs), request)
+        assert inputs_ == [request] + inputs + [request]
 
 
 def test_queue_enabled_for_fn():
