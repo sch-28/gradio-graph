@@ -223,11 +223,13 @@ importers:
     specifiers:
       '@steeze-ui/heroicons': ^2.2.1
       '@steeze-ui/svelte-icon': ^1.3.2
+      fuse.js: ^6.6.2
       vis-data: ^7.1.4
       vis-network: ^9.1.2
     devDependencies:
       '@steeze-ui/heroicons': 2.2.1
       '@steeze-ui/svelte-icon': 1.3.2
+      fuse.js: 6.6.2
       vis-data: 7.1.4
       vis-network: 9.1.2_vis-data@7.1.4
 
@@ -1879,6 +1881,11 @@ packages:
 
   /function-bind/1.1.1:
     resolution: {integrity: sha512-yIovAzMX49sF8Yl58fSCWJ5svSLuaibPxXQJFLmBObTuCr0Mf1KiPopGM9NiFjiYBCbfaa2Fh6breQ6ANVTI0A==}
+
+  /fuse.js/6.6.2:
+    resolution: {integrity: sha512-cJaJkxCCxC8qIIcPBF9yGxY0W/tVZS3uEISDxhYIdtk8OL93pe+6Zj7LjCqVV4dzbqcriOZ+kQ/NE4RXZHsIGA==}
+    engines: {node: '>=10'}
+    dev: true
 
   /get-caller-file/2.0.5:
     resolution: {integrity: sha512-DyFP3BM/3YHTQOCUL/w0OZHR0lpKeGrxotcHWcqNEdnltqFwXVfhEBQ94eIo34AfQpo0rGki4cyIiftY06h2Fg==}
