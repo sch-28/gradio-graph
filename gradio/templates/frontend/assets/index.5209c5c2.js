@@ -1,0 +1,2 @@
+import{A as r}from"./Audio.0166cdc6.js";import"./index.98bfcaed.js";import"./Upload.6027dcdf.js";import"./ModifyUpload.129f8aa2.js";import"./BlockLabel.5b6acab5.js";import"./utils.27234e1d.js";const m=["static","dynamic"],e=()=>({type:"{ name: string; data: string }",description:"audio data as base64 string",example_data:{name:"audio.wav",data:"data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA="}});export{r as Component,e as document,m as modes};
+//# sourceMappingURL=index.5209c5c2.js.map

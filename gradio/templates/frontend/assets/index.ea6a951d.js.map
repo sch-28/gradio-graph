@@ -1,0 +1,1 @@
+{"version":3,"file":"index.ea6a951d.js","sources":["../../../../ui/packages/app/src/components/Accordion/index.ts"],"sourcesContent":["export { default as Component } from \"./Accordion.svelte\";\nexport const modes = [\"static\"];\n"],"names":[],"mappings":"0GACa,GAAQ,CAAC,QAAQ"}
