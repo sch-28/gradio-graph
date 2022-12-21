@@ -74,6 +74,7 @@ class Block:
         elem_id: str | None = None,
         visible: bool = True,
         root_url: str | None = None,  # URL that is prepended to all file paths
+        _skip_init_processing: bool = False,  # Used for loading from Spaces
         **kwargs,
     ):
         self._id = Context.id
@@ -81,6 +82,7 @@ class Block:
         self.visible = visible
         self.elem_id = elem_id
         self.root_url = root_url
+        self._skip_init_processing = _skip_init_processing
         self._style = {}
         if render:
             self.render()
@@ -352,15 +354,17 @@ class class_or_instancemethod(classmethod):
         return descr_get(instance, type_)
 
 
+set_documentation_group("component-helpers")
+
+
 @document()
 def update(**kwargs) -> dict:
     """
-    Updates component properties.
+    Updates component properties. When a function passed into a Gradio Interface or a Blocks events returns a typical value, it updates the value of the output component. But it is also possible to update the properties of an output component (such as the number of lines of a `Textbox` or the visibility of an `Image`) by returning the component's `update()` function, which takes as parameters any of the constructor parameters for that component.
     This is a shorthand for using the update method on a component.
     For example, rather than using gr.Number.update(...) you can just use gr.update(...).
     Note that your editor's autocompletion will suggest proper parameters
     if you use the update method on the component.
-
     Demos: blocks_essay, blocks_update, blocks_essay_update
 
     Parameters:
@@ -393,6 +397,9 @@ def update(**kwargs) -> dict:
     """
     kwargs["__type__"] = "generic_update"
     return kwargs
+
+
+set_documentation_group("blocks")
 
 
 def skip() -> dict:
@@ -602,7 +609,8 @@ class Blocks(BlockContext):
             style = block_config["props"].pop("style", None)
             if block_config["props"].get("root_url") is None and root_url:
                 block_config["props"]["root_url"] = root_url + "/"
-            block = cls(**block_config["props"])
+            # Any component has already processed its initial value, so we skip that step here
+            block = cls(**block_config["props"], _skip_init_processing=True)
             if style:
                 block.style(**style)
             return block
@@ -657,13 +665,14 @@ class Blocks(BlockContext):
                         first_dependency = dependency
 
             # Allows some use of Interface-specific methods with loaded Spaces
-            blocks.predict = [fns[0]]
-            blocks.input_components = [
-                Context.root_block.blocks[i] for i in first_dependency["inputs"]
-            ]
-            blocks.output_components = [
-                Context.root_block.blocks[o] for o in first_dependency["outputs"]
-            ]
+            if first_dependency:
+                blocks.predict = [fns[0]]
+                blocks.input_components = [
+                    Context.root_block.blocks[i] for i in first_dependency["inputs"]
+                ]
+                blocks.output_components = [
+                    Context.root_block.blocks[o] for o in first_dependency["outputs"]
+                ]
 
         if config.get("mode", "blocks") == "interface":
             blocks.__name__ = "Interface"
@@ -1185,7 +1194,7 @@ class Blocks(BlockContext):
         concurrency_count: int = 1,
         status_update_rate: float | str = "auto",
         client_position_to_load_data: int | None = None,
-        default_enabled: bool = True,
+        default_enabled: bool | None = None,
         api_open: bool = True,
         max_size: int | None = None,
     ):
@@ -1195,7 +1204,7 @@ class Blocks(BlockContext):
             concurrency_count: Number of worker threads that will be processing requests from the queue concurrently. Increasing this number will increase the rate at which requests are processed, but will also increase the memory usage of the queue.
             status_update_rate: If "auto", Queue will send status estimations to all clients whenever a job is finished. Otherwise Queue will send status at regular intervals set by this parameter as the number of seconds.
             client_position_to_load_data: DEPRECATED. This parameter is deprecated and has no effect.
-            default_enabled: If True, all event listeners will use queueing by default.
+            default_enabled: Deprecated and has no effect.
             api_open: If True, the REST routes of the backend will be open, allowing requests made directly to those endpoints to skip the queue.
             max_size: The maximum number of events the queue will store at any given moment. If the queue is full, new events will not be added and a user will receive a message saying that the queue is full. If None, the queue size will be unlimited.
         Example:
@@ -1203,7 +1212,12 @@ class Blocks(BlockContext):
             demo.queue(concurrency_count=3)
             demo.launch()
         """
-        self.enable_queue = default_enabled
+        if default_enabled is not None:
+            warnings.warn(
+                "The default_enabled parameter of queue has no effect and will be removed "
+                "in a future version of gradio."
+            )
+        self.enable_queue = True
         self.api_open = api_open
         if client_position_to_load_data is not None:
             warnings.warn("The client_position_to_load_data parameter is deprecated.")
@@ -1416,11 +1430,6 @@ class Blocks(BlockContext):
                 raise RuntimeError("Share is not supported when you are in Spaces")
             try:
                 if self.share_url is None:
-                    print(
-                        "\nSetting up a public link... we have recently upgraded the "
-                        "way public links are generated. If you encounter any "
-                        "problems, please report the issue and downgrade to gradio version 3.13.0\n."
-                    )
                     self.share_url = networking.setup_tunnel(
                         self.server_name, self.server_port
                     )
